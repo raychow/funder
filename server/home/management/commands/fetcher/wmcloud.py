@@ -42,11 +42,9 @@ class Fetcher:
     def _parse_net_values(json_text):
         result = []
         wmcloud_result = json.loads(json_text)
-        code = wmcloud_result['retCode'] if 'retCode' in wmcloud_result \
-            else wmcloud_result['code']
-        message = wmcloud_result['retMsg'] if 'retMsg' in wmcloud_result \
-            else wmcloud_result['message']
-        data = wmcloud_result['data'] or [] if 'data' in wmcloud_result else []
+        code = Fetcher._get_by_keys(wmcloud_result, 'retCode', 'code')
+        message = Fetcher._get_by_keys(wmcloud_result, 'retMsg', 'message')
+        data = wmcloud_result.get('data', []) or []
         logger.info('Return code %d, message "%s", data length: %d.' % (
             code, message, len(data)
         ))
@@ -70,3 +68,7 @@ class Fetcher:
             acc_nav=orig_net_value['ACCUM_NAV'],
             adjust_nav=orig_net_value['ADJUST_NAV'],
         )
+
+    @staticmethod
+    def _get_by_keys(obj, first_key, second_key):
+        return obj[first_key] if first_key in obj else obj[second_key]
