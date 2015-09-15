@@ -57,17 +57,21 @@ class Fetcher:
 
     @staticmethod
     def _parse_net_value(orig_net_value):
-        fund = Fund(
-            code=orig_net_value['ticker'],
-            name=orig_net_value['secShortName'],
-        )
-        return NetValue(
-            date=orig_net_value['endDate'],
-            fund=fund,
-            nav=orig_net_value['NAV'],
-            acc_nav=orig_net_value['ACCUM_NAV'],
-            adjust_nav=orig_net_value['ADJUST_NAV'],
-        )
+        try:
+            fund = Fund(
+                code=orig_net_value['ticker'],
+                name=orig_net_value['secShortName'],
+            )
+            return NetValue(
+                date=orig_net_value['endDate'],
+                fund=fund,
+                nav=orig_net_value['NAV'],
+                acc_nav=orig_net_value['ACCUM_NAV'],
+                adjust_nav=orig_net_value.get('ADJUST_NAV', None)
+            )
+        except KeyError as e:
+            raise RuntimeError('Parse net value failed, orig_net_value is %s'
+                               % orig_net_value) from e
 
     @staticmethod
     def _get_by_keys(obj, first_key, second_key):

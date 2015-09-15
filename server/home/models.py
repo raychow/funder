@@ -14,7 +14,7 @@ class NetValue(models.Model):
     fund = models.ForeignKey(Fund)
     nav = models.DecimalField(max_digits=8, decimal_places=4)
     acc_nav = models.DecimalField(max_digits=8, decimal_places=4)
-    adjust_nav = models.DecimalField(max_digits=8, decimal_places=4)
+    adjust_nav = models.DecimalField(max_digits=8, decimal_places=4, null=True)
 
 
 class FundFile(models.Model):
